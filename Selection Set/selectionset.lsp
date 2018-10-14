@@ -1,6 +1,6 @@
-(defun C:SS1 ()
+(defun C:SS1 ()                     ;store selection set
   (setq SS1 (ssget)))
-(defun C:S1 ()
+(defun C:S1 ()                      ;highlight selection set
   (command "._pselect" ss1 ""))
 
 (defun C:SS2 ()
