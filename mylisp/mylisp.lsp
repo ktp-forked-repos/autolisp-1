@@ -1,49 +1,49 @@
-;Alias Overwrite
-(defun c:a () (command "._matchprop"))
-(defun c:e () (command "._scale"))
-(defun c:ch () (command "._chamfer"))
-(defun c:d () (command "._laydel"))
-(defun c:dwg () (command "._dwg-purge"))
-(defun c:lc () (command "._laymcur"))
-(defun c:loo () (command "._layerp"))
-(defun c:lm () (command "._laymch"))
-(defun c:m () (command "._measuregeom"))
-(defun c:ou () (command "._draworderf"))
-(defun c:oa () (command "._drawordera"))
-(defun c:r () (command "._rotate"))
-(defun c:re () (command "._rectangle"))
-(defun c:rg () (command "._regen"))
-(defun c:w () (command "._move"))
+;;Alias Overwrite
+(defun c:a () (command "._matchprop") (princ))
+(defun c:e () (command "._scale") (princ))
+(defun c:ch () (command "._chamfer") (princ))
+(defun c:d () (command "._laydel") (princ))
+(defun c:dwg () (command "._dwg-purge") (princ))
+(defun c:lc () (command "._laymcur") (princ))
+(defun c:loo () (command "._layerp") (princ))
+(defun c:lm () (command "._laymch") (princ))
+(defun c:m () (command "._measuregeom") (princ))
+(defun c:ou () (command "._draworderf") (princ))
+(defun c:oa () (command "._drawordera") (princ))
+(defun c:r () (command "._rotate") (princ))
+(defun c:re () (command "._rectangle") (princ))
+(defun c:rg () (command "._regen") (princ))
+(defun c:w () (command "._move") (princ))
 
-;==============================================================
-;天正命令
-(defun c:2w () (command "._tswall"))
-(defun c:atr () (command "._tclipaxis"))
-(defun c:bg () (command "._tmelev"))
-(defun c:fw () (command "._tfixwall"))
-(defun c:rad () (command "._tdimrad"))
-(defun c:t () (command "._ttext"))
-(defun c:tt () (command "._tmtext"))
-(defun c:st () (command "._alytop"))
-(defun c:sb () (command "._alybottom"))                                         ;TVERTSLAB was overwrite
-(defun c:sl () (command "._alxleft"))
-(defun c:sr () (command "._alxright"))                                          ;SROOF was overwrite
+;;天正命令
+(defun c:2w () (command "._tswall") (princ))
+(defun c:atr () (command "._tclipaxis") (princ))
+(defun c:bg () (command "._tmelev") (princ))
+(defun c:fw () (command "._tfixwall") (princ))
+(defun c:rad () (command "._tdimrad") (princ))
+(defun c:t () (command "._ttext") (princ))
+(defun c:tt () (command "._tmtext") (princ))
+(defun c:tm () (command "._ttextmerge") (princ))
+(defun c:st () (command "._alytop") (princ))
+(defun c:sb () (command "._alybottom") (princ))                                 ;TVERTSLAB was overwrite
+(defun c:sl () (command "._alxleft") (princ))
+(defun c:sr () (command "._alxright") (princ))                                  ;SROOF was overwrite
 
-;天正顺序调整
-(defun c:ssh () (command "._toutlna"))
-(defun c:ss () (command "._tseoutline"))
-(defun c:ssf () (command "._tupdspace"))
+;;天正顺序调整
+(defun c:ssh () (command "._toutlna") (princ))
+(defun c:ss () (command "._tseoutline") (princ))
+(defun c:ssf () (command "._tupdspace") (princ))
 
-;==============================================================
+                                                                                ;==============================================================
 
-                                                                                ;create new layer named after 0_Plot
+;;create new layer named after 0_Plot
 (defun createlayplot  ()                                                        ;Custom layer
  (command "._layer" "n" "0_Plot"                                                ;Layer name
           "p" "n" "0_Plot"                                                      ;Layer plot
           "c" "40" "0_Plot"                                                     ;Layer color
           "d" "Aid layer" "0_Plot" ""))                                         ;layer description)
 
-                                                                                ;change the property of last xline
+;;change the property of last xline
 (defun changexline  ()
  (command "._change" "l" "" "p" "la" "0_Plot" ""))
 
@@ -55,24 +55,12 @@
              (progn (createlayplot) (changexline))))))
 
 
-                                                                                ;Selection set
-(defun C:SS1 () (setq SS1 (ssget)))
-(defun C:S1 () (command "._pselect" ss1 ""))
 
-(defun C:SS2 () (setq SS2 (ssget)))
-(defun C:S2 () (command "._pselect" ss2 ""))
+;; Outline Objects  -  Lee Mac
+;; Attempts to generate a polyline outlining the selected objects.
+;; sel - [sel] Selection Set to outline
+;; Returns: [sel] A selection set of all objects created
 
-(defun C:SS3 () (setq SS3 (ssget)))
-(defun C:S3 () (command "._pselect" ss3 ""))
-
-(defun C:SS4 () (setq SS4 (ssget)))
-(defun C:S4 () (command "._pselect" ss4 ""))
-
-(defun C:SS5 () (setq SS5 (ssget)))
-(defun C:S5 () (command "._pselect" ss5 ""))
-
-
-                                                                                ;Outline
 (defun c:oo  (/ *error* sel)
  (defun *error*  (msg)
   (LM:endundo (LM:acdoc))
@@ -84,11 +72,6 @@
          (LM:outline sel)
          (LM:endundo (LM:acdoc))))
  (princ))
-
-;; Outline Objects  -  Lee Mac
-;; Attempts to generate a polyline outlining the selected objects.
-;; sel - [sel] Selection Set to outline
-;; Returns: [sel] A selection set of all objects created
 
 (defun LM:outline  (sel / app are box cmd dis enl ent lst obj rtn tmp)
  (if (setq box (LM:ssboundingbox sel))
@@ -250,10 +233,9 @@
 
 
 
-                                                                                ; Merge Hatch
 (defun massoc  (key alst /)
  (vl-remove-if '(lambda (pair) (/= (car pair) key)) alst))
-                                                                                ;---------------------------------------------------------------------------
+;; Merge Hatch
 (defun c:MergeHatch  (/ hentinfo ss i ent ent# seedpt# entinfo entinfo2 seedpts MergedHatchList Turnoff BGColor)
  (vl-load-com)
  (while (/= (cdr (assoc 0 hentinfo)) "HATCH")
@@ -310,22 +292,3 @@
  (vla-put-backgroundcolor (vlax-ename->vla-object ent) BGColor)
  (princ))
 (defun c:MH () (c:MergeHatch))
-
-;|
-Quick Block
-Creates a block instantly out of the objects that you select
-Found at http://forums.autodesk.com/t5/Visual-LISP-AutoLISP-and-General/Quick-block/td-p/3454228
-|;
-
-(defun c:QB	 (/ selectionset insertionpoint number Blockname)
-;;; Tharwat 11. May. 2012 ;;
- (if (and (setq selectionset (ssget "_:L"))
-		  (setq insertionpoint (getpoint "\n Specify insertion point :")))
-  (progn (setq number	 1
-			   Blockname (strcat "MyBlock" (itoa number)))
-		 (while	(tblsearch "BLOCK" Blockname)
-		  (setq Blockname (strcat "MyBlock" (itoa (setq number (1+ number))))))
-		 (command "_.-Block" Blockname insertionpoint selectionset "")
-		 (command "_.-insert" Blockname insertionpoint "" "" "")) 
-  (princ))
- (princ))
