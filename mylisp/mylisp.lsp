@@ -34,7 +34,7 @@
 (defun c:ss () (command "._tseoutline") (princ))
 (defun c:ssf () (command "._tupdspace") (princ))
 
-                                                                                ;==============================================================
+
 
 ;;create new layer named after 0_Plot
 (defun createlayplot  ()                                                        ;Custom layer
@@ -169,7 +169,7 @@
 
 
 
-                                                                                ;Outline Polyline
+;;;Outline Polyline
 
 (defun c:OLPL  (/ _subst _fixLast _reverseLWPPoints filter ss wd/2 offlst dxf210)
  ;; Outline selected LWPolylines
@@ -235,7 +235,25 @@
 
 (defun massoc  (key alst /)
  (vl-remove-if '(lambda (pair) (/= (car pair) key)) alst))
-;; Merge Hatch
+
+
+
+
+;;By Juan Villarreal
+;;This routine will recreate hatches into a single hatch as if "create separate hatches" was not selected.
+;;
+;;Known Problems and Solutions:
+;;1. Associativity can be lost.
+;; - To retain the associative parameter, all selected objects must be associative.
+;; - Non-Associative Hatch Objects do not contain the entity name of the object used during hatch creation within their DXF group codes.
+;;
+;;2. The routine may not function if joining a hatch object created via "select object" with that created via "select point".
+;; - If joining hatch objects created using both methods, select the hatch object created via "select point" as the "Hatch Pattern to MATCH". 
+
+;;---------------------------------------------------------------------------
+(defun massoc  (key alst /)
+ (vl-remove-if '(lambda (pair) (/= (car pair) key)) alst))
+;;---------------------------------------------------------------------------
 (defun c:MergeHatch  (/ hentinfo ss i ent ent# seedpt# entinfo entinfo2 seedpts MergedHatchList Turnoff BGColor)
  (vl-load-com)
  (while (/= (cdr (assoc 0 hentinfo)) "HATCH")
@@ -292,3 +310,23 @@
  (vla-put-backgroundcolor (vlax-ename->vla-object ent) BGColor)
  (princ))
 (defun c:MH () (c:MergeHatch))
+
+
+ ;|
+Quick Block
+Creates a block instantly out of the objects that you select
+Found at http://forums.autodesk.com/t5/Visual-LISP-AutoLISP-and-General/Quick-block/td-p/3454228
+|;
+
+(defun c:QB  (/ selectionset insertionpoint number Blockname)
+;;; Tharwat 11. May. 2012 ;;
+ (if (and (setq selectionset (ssget "_:L"))
+          (setq insertionpoint (getpoint "\n Specify insertion point :")))
+  (progn (setq number    1
+               Blockname (strcat "MyBlock" (itoa number)))
+         (while (tblsearch "BLOCK" Blockname)
+          (setq Blockname (strcat "MyBlock" (itoa (setq number (1+ number))))))
+         (command "_.-Block" Blockname insertionpoint selectionset "")
+         (command "_.-insert" Blockname insertionpoint "" "" ""))
+  (princ))
+ (princ))
