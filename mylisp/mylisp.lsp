@@ -4,18 +4,18 @@
 (defun c:ch () (command "._chamfer") (princ))
 (defun c:d () (command "._laydel") (princ))
 (defun c:dwg () (command "._dwg-purge") (princ))
-(defun c:lc () (command "._laymcur") (princ))
 (defun c:loo () (command "._layerp") (princ))
 (defun c:lm () (command "._laymch") (princ))
 (defun c:m () (command "._measuregeom") (princ))
-(defun c:ou () (command "._draworderf") (princ))
+(defun c:ou () (command "._draworderu") (princ))
 (defun c:oa () (command "._drawordera") (princ))
 (defun c:r () (command "._rotate") (princ))
 (defun c:re () (command "._rectangle") (princ))
 (defun c:rg () (command "._regen") (princ))
+(defun c:set () (command "._fastsel") (princ))
 (defun c:w () (command "._move") (princ))
 
-;;ÌìÕýÃüÁî
+;;天正命令
 (defun c:2w () (command "._tswall") (princ))
 (defun c:atr () (command "._tclipaxis") (princ))
 (defun c:bg () (command "._tmelev") (princ))
@@ -30,12 +30,14 @@
 (defun c:sl () (command "._alxleft") (princ))
 (defun c:sr () (command "._alxright") (princ))					;SROOF was overwrite
 
-;;ÌìÕýË³Ðòµ÷Õû
-(defun c:ssh () (command "._toutlna") (princ))
+;;天正顺序调整
 (defun c:ss () (command "._tseoutline") (princ))
 (defun c:ssf () (command "._tupdspace") (princ))
 
-
+;;Create new polyline boundaries for hatches
+(defun C:CREATEPOLYLINEBOUNDARIES ()
+ (command "._-HATCHEDIT" "B" "P" "Y")
+ (princ))
 
 ;;create new layer named after 0_Plot
 (defun createlayplot  ()							;Custom layer
@@ -346,7 +348,7 @@ Creates a block instantly out of the objects that you select
 Found at http://forums.autodesk.com/t5/Visual-LISP-AutoLISP-and-General/Quick-block/td-p/3454228
 |;
 
-(defun c:QB	 (/ selectionset insertionpoint number Blockname)
+(defun c:QUICKBLOCK	 (/ selectionset insertionpoint number Blockname blocktime)
 ;;; Tharwat 11. May. 2012 ;;
  (setq blocktime (rtos (getvar "CDATE") 2 6))
  (if (and (setq selectionset (ssget "_:L"))
